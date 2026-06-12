@@ -1,0 +1,56 @@
+/* custom styles matching the Urso dos Mil Flagelos (Thousand Pierced Volibear) theme */
+
+/* Shadows and Glows corresponding to purple lightning */
+.text-shadow-glow {
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.5);
+}
+
+.box-shadow-glow {
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), inset 0 0 10px rgba(168, 85, 247, 0.3);
+}
+
+.hover\:box-shadow-glow:hover {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.8), inset 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+/* Custom scrollbars matching the theme */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(168, 85, 247, 0.5);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(168, 85, 247, 0.8);
+}
+
+/* Animations and transitions */
+@keyframes pulseGlow {
+    0%, 100% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.95;
+        transform: scale(1.02);
+    }
+}
+
+.animate-pulse-glow {
+    animation: pulseGlow 3s infinite ease-in-out;
+}
+
+/* Base Body settings */
+body {
+    background-color: #0d0510;
+}
+
+/* Button Skew adjustments */
+.nav-btn:hover span {
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.9);
+}
