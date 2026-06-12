@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volibear - O Urso dos Mil Flagelos</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Style Settings -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#0d0510] text-white overflow-hidden leading-relaxed select-none">
+
+    <!-- Visual background flash effect -->
+    <div id="flash-overlay" class="fixed inset-0 bg-white z-[100] pointer-events-none opacity-0 transition-opacity duration-75"></div>
+
+    <!-- Lightning Canvas particles -->
+    <canvas id="lightning-canvas" class="fixed inset-0 z-[101] pointer-events-none"></canvas>
+
+    <!-- Hidden audio element -->
+    <audio id="volibear-audio" src="volibear_quotes.mp3" preload="auto"></audio>
+
+    <!-- App Wrapper to capture lightning clicks -->
+    <div id="app" class="relative w-screen h-screen overflow-hidden">
+        
+        <!-- Live-updating Ambient Video -->
+        <div id="video-root" class="fixed inset-0 z-[-1] hidden">
+            <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                <source src="https://motionbgs.com/media/5071/thousand-pierced-volibear.960x540.mp4" type="video/mp4">
+            </video>
+            <!-- Overlay gradient to boost storm vibe -->
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0d0510] via-transparent to-transparent opacity-80"></div>
+            <div class="absolute inset-0 bg-purple-900/15 mix-blend-overlay"></div>
+        </div>
+
+        <!-- SCREEN 1: Intro Screen -->
+        <div id="screen-intro" class="absolute inset-0 flex flex-col items-center justify-center cursor-pointer bg-black z-50 transition-opacity duration-1000">
+            <p class="font-cinzel text-2xl md:text-3xl tracking-[0.5em] text-purple-300/80 uppercase hover:text-white transition-all duration-300 animate-pulse text-center px-4">
+                Entrar na Tempestade
+            </p>
+            <div class="mt-8 text-white/30 font-sans text-xs tracking-widest uppercase">CLIQUE PARA INICIAR</div>
+        </div>
+
+        <!-- SCREEN 2: Main Menu -->
+        <div id="screen-menu" class="absolute inset-0 flex items-center justify-center bg-black/40 z-20 hidden opacity-0 transition-opacity duration-500">
+            <div class="flex flex-col items-center justify-center h-full w-full max-w-4xl mx-auto px-6 text-center">
+                <div class="mb-2 text-purple-300/60 tracking-[0.3em] font-sans text-sm md:text-base uppercase">League of Legends</div>
+                <h1 class="font-cinzel text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-purple-300 to-purple-600 text-shadow-glow mb-16 tracking-widest">
+                    VOLIBEAR
+                </h1>
+
+                <nav class="flex flex-col md:flex-row gap-6 md:gap-12 items-center">
+                    <button onclick="navigateTo('lore')" class="nav-btn group relative px-6 py-3 overflow-hidden focus:outline-none">
+                        <div class="absolute inset-0 w-full h-full border border-purple-500/0 group-hover:border-purple-400/50 transition-colors duration-500 skew-x-[-15deg]"></div>
+                        <span class="relative z-10 font-cinzel text-xl md:text-2xl font-bold tracking-[0.2em] text-gray-300 group-hover:text-white transition-all duration-300 group-hover:text-shadow-glow uppercase">
+                            lore
+                        </span>
+                    </button>
+                    <button onclick="navigateTo('abilities')" class="nav-btn group relative px-6 py-3 overflow-hidden focus:outline-none">
+                        <div class="absolute inset-0 w-full h-full border border-purple-500/0 group-hover:border-purple-400/50 transition-colors duration-500 skew-x-[-15deg]"></div>
+                        <span class="relative z-10 font-cinzel text-xl md:text-2xl font-bold tracking-[0.2em] text-gray-300 group-hover:text-white transition-all duration-300 group-hover:text-shadow-glow uppercase">
+                            habilidades
+                        </span>
+                    </button>
+                    <button onclick="navigateTo('quotes')" class="nav-btn group relative px-6 py-3 overflow-hidden focus:outline-none">
+                        <div class="absolute inset-0 w-full h-full border border-purple-500/0 group-hover:border-purple-400/50 transition-colors duration-500 skew-x-[-15deg]"></div>
+                        <span class="relative z-10 font-cinzel text-xl md:text-2xl font-bold tracking-[0.2em] text-gray-300 group-hover:text-white transition-all duration-300 group-hover:text-shadow-glow uppercase">
+                            falas
+                        </span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: Lore View -->
+        <div id="screen-lore" class="absolute inset-0 flex flex-col items-center pt-24 pb-12 p-4 bg-black/80 overflow-y-auto z-20 hidden opacity-0 transition-opacity duration-500">
+            <div class="max-w-3xl w-full flex flex-col mx-auto p-4 md:p-8 bg-black/40 backdrop-blur-sm border border-purple-900/50 rounded-lg box-shadow-glow">
+                <button onclick="navigateBack()" class="self-start text-purple-300 hover:text-white flex items-center gap-2 transition-all duration-300 uppercase font-sans tracking-widest text-sm bg-purple-900/40 hover:bg-purple-800/80 px-5 py-3 rounded border border-purple-500 hover:border-purple-300 hover:box-shadow-glow mb-8">
+                    <i data-lucide="chevron-left" class="w-5 h-5"></i> RETORNAR
+                </button>
+                <h2 class="font-cinzel text-4xl md:text-5xl font-bold mb-6 text-white text-shadow-glow">O Rugido do Trovão</h2>
+                
+                <div class="space-y-4 font-sans text-gray-300 text-lg leading-relaxed">
+                    <p>
+                        Para alguns, ele é o Rugido do Trovão, o Grande Urso, a Tempestade Impiedosa. Mas, para aqueles que ainda seguem as antigas tradições em Freljord, ele é Volibear.
+                    </p>
+                    <p>
+                        Uma divindade ancestral cujos irmãos formaram as próprias terras áridas e geladas. Volibear se recusa a aceitar o mundo moderno, onde o fogo apagou a memória da magia bruta do gelo e da tempestade. Ele busca despedaçar as evidências da civilização para que o povo volte a reverenciar o lado mais primitivo da natureza.
+                    </p>
+                    <p>
+                        Com garras eletrizadas e uma força indomável, ele não descansa até que a humanidade se curve novamente diante de seu aspecto bestial.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: Abilities View -->
+        <div id="screen-abilities" class="absolute inset-0 flex flex-col items-center pt-24 pb-12 p-4 bg-black/80 overflow-y-auto z-20 hidden opacity-0 transition-opacity duration-500">
+            <div class="max-w-4xl w-full flex flex-col mx-auto p-4 md:p-8">
+                <button onclick="navigateBack()" class="self-start text-purple-300 hover:text-white flex items-center gap-2 transition-all duration-300 uppercase font-sans tracking-widest text-sm bg-purple-900/40 hover:bg-purple-800/80 px-5 py-3 rounded border border-purple-500 hover:border-purple-300 hover:box-shadow-glow mb-8">
+                    <i data-lucide="chevron-left" class="w-5 h-5"></i> RETORNAR
+                </button>
+                <h2 class="font-cinzel text-4xl md:text-5xl font-bold mb-10 text-center text-white text-shadow-glow">Habilidades Divinas</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Passiva -->
+                    <div class="p-6 bg-black/50 border border-purple-900/30 rounded-lg backdrop-blur-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="font-cinzel text-xl text-purple-200 font-bold">Passiva</span>
+                            <div class="w-px h-4 bg-purple-700/50"></div>
+                            <h3 class="font-cinzel text-xl font-bold text-white tracking-wide">A Tormenta Implacável</h3>
+                        </div>
+                        <p class="font-sans text-gray-400 text-sm leading-relaxed">
+                            Os ataques de Volibear acumulam velocidade de ataque. Quando no máximo, seus ataques causam Dano Mágico em cadeia a inimigos próximos.
+                        </p>
+                    </div>
+                    <!-- Q -->
+                    <div class="p-6 bg-black/50 border border-purple-900/30 rounded-lg backdrop-blur-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="font-cinzel text-xl text-purple-200 font-bold">Q</span>
+                            <div class="w-px h-4 bg-purple-700/50"></div>
+                            <h3 class="font-cinzel text-xl font-bold text-white tracking-wide">Esmagamento Trovejante</h3>
+                        </div>
+                        <p class="font-sans text-gray-400 text-sm leading-relaxed">
+                            Volibear ganha velocidade em direção a inimigos e atordoa o primeiro que atingir.
+                        </p>
+                    </div>
+                    <!-- W -->
+                    <div class="p-6 bg-black/50 border border-purple-900/30 rounded-lg backdrop-blur-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="font-cinzel text-xl text-purple-200 font-bold">W</span>
+                            <div class="w-px h-4 bg-purple-700/50"></div>
+                            <h3 class="font-cinzel text-xl font-bold text-white tracking-wide">Fúria Selvagem</h3>
+                        </div>
+                        <p class="font-sans text-gray-400 text-sm leading-relaxed">
+                            Volibear desfere um ataque que causa dano e marca o inimigo. Se usar a habilidade no mesmo alvo, causa dano adicional e cura a si mesmo.
+                        </p>
+                    </div>
+                    <!-- E -->
+                    <div class="p-6 bg-black/50 border border-purple-900/30 rounded-lg backdrop-blur-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="font-cinzel text-xl text-purple-200 font-bold">E</span>
+                            <div class="w-px h-4 bg-purple-700/50"></div>
+                            <h3 class="font-cinzel text-xl font-bold text-white tracking-wide">Divisor de Céus</h3>
+                        </div>
+                        <p class="font-sans text-gray-400 text-sm leading-relaxed">
+                            Volibear invoca um raio em uma área que causa dano e lentidão a inimigos, ao mesmo tempo que lhe concede um escudo.
+                        </p>
+                    </div>
+                    <!-- R -->
+                    <div class="p-6 bg-black/50 border border-purple-400 rounded-lg backdrop-blur-sm md:col-span-2">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="font-cinzel text-xl text-purple-200 font-bold">R</span>
+                            <div class="w-px h-4 bg-purple-700/50"></div>
+                            <h3 class="font-cinzel text-xl font-bold text-white tracking-wide">Emissário da Tormenta</h3>
+                        </div>
+                        <p class="font-sans text-gray-400 text-sm leading-relaxed">
+                            Volibear salta na direção de um local, causando dano e lentidão. Ele cresce de tamanho, recebe Vida e destrói ou desativa brevemente torres.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 5: Quotes View -->
+        <div id="screen-quotes" class="absolute inset-0 flex flex-col items-center justify-center p-4 bg-black/80 overflow-y-auto z-20 hidden opacity-0 transition-opacity duration-500">
+            <div class="max-w-3xl w-full flex flex-col items-center justify-center text-center mx-auto p-4 md:p-8">
+                <button onclick="navigateBack()" class="self-start text-purple-300 hover:text-white flex items-center gap-2 transition-all duration-300 uppercase font-sans tracking-widest text-sm bg-purple-900/40 hover:bg-purple-800/80 px-5 py-3 rounded border border-purple-500 hover:border-purple-300 hover:box-shadow-glow mb-8">
+                    <i data-lucide="chevron-left" class="w-5 h-5"></i> RETORNAR
+                </button>
+                
+                <i data-lucide="volume-2" class="w-12 h-12 text-purple-300 mb-6 opacity-80"></i>
+                <h2 class="font-cinzel text-4xl md:text-5xl font-bold mb-4 text-white text-shadow-glow">Voz da Tempestade</h2>
+                <p class="font-sans text-gray-400 mb-12 max-w-lg">
+                    Ouça o trovão ecoar através das eras. Invoque as palavras do deus primordial de Freljord.
+                </p>
+
+                <button onclick="playQuote()" class="group relative px-10 py-5 bg-transparent border-2 border-purple-400/80 rounded flex items-center justify-center overflow-hidden transition-all duration-300 hover:border-purple-200 hover:box-shadow-glow hover:scale-105 active:scale-95 focus:outline-none">
+                    <span class="relative z-10 font-cinzel text-2xl md:text-3xl font-bold tracking-widest text-[#f3e8ff] drop-shadow-[0_0_8px_rgba(168,85,247,0.8)] group-hover:text-white transition-colors duration-300">
+                        INVOCAR O TROVÃO
+                    </span>
+                    <div class="absolute inset-0 bg-purple-500/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                </button>
+                
+                <p class="mt-6 text-xs text-purple-300/50 font-sans tracking-widest uppercase">
+                    Clique para chamar o poder e a voz (se o áudio falhar, ative a interação na página)
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Initialize Lucide Icons -->
+    <script>
+        lucide.createIcons();
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
